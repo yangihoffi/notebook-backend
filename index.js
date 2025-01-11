@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
 
 let notes = [
@@ -23,6 +24,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello!</h1>");
