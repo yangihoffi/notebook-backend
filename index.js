@@ -1,4 +1,5 @@
 const express = require("express");
+const { v4: uuidv4 } = require("uuid");
 
 let notes = [
   {
@@ -21,6 +22,8 @@ let notes = [
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("<h1>Hello!</h1>");
 });
@@ -38,6 +41,26 @@ app.get("/api/notes/:id", (req, res) => {
   } else {
     res.status(404).end();
   }
+});
+
+app.post("/api/notes", (req, res) => {
+  const body = req.body;
+
+  if (!body.content) {
+    return res.status(400).json({
+      error: "content missing",
+    });
+  }
+
+  const note = {
+    content: body.content,
+    important: Boolean(body.important) || false,
+    id: uuidv4(),
+  };
+
+  notes = notes.concat(note);
+
+  res.json(note);
 });
 
 app.delete("/api/notes/:id", (req, res) => {
