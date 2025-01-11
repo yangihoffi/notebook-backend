@@ -1,26 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const { v4: uuidv4 } = require("uuid");
 const Note = require("./models/note.model");
-
-let notes = [
-  {
-    id: "1",
-    content: "HTML is easy",
-    important: true,
-  },
-  {
-    id: "2",
-    content: "Browser can execute only JavaScript",
-    important: false,
-  },
-  {
-    id: "3",
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true,
-  },
-];
 
 const app = express();
 const PORT = process.env.PORT;
@@ -81,11 +62,29 @@ app.post("/api/notes", (req, res) => {
   });
 });
 
-app.delete("/api/notes/:id", (req, res) => {
+app.put("/api/notes/:id", (req, res, next) => {
   const id = req.params.id;
-  notes = notes.filter((n) => n.id !== id);
+  const body = req.body;
 
-  res.status(204).end();
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(id, note, { new: true })
+    .then((updateNote) => {
+      res.json(updateNote);
+    })
+    .catch((error) => next(error));
+});
+
+app.delete("/api/notes/:id", (req, res, next) => {
+  const id = req.params.id;
+  Note.findByIdAndDelete(id)
+    .then((res) => {
+      res.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
 app.use(errorHandler);
