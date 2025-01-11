@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { v4: uuidv4 } = require("uuid");
-const mongoose = require("mongoose");
+const Note = require("./models/note.model");
 
 let notes = [
   {
@@ -23,26 +23,7 @@ let notes = [
 ];
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const url = process.env.MONGODB_URI;
-
-mongoose.set("strictQuery", false);
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-});
-
-noteSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model("Note", noteSchema);
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
