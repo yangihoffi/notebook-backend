@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const Note = require("./models/note.model");
+const notesRouter = require("./controllers/notes.controller");
 
 const app = express();
 
@@ -14,76 +14,11 @@ const errorHandler = (error, req, res, next) => {
   next(error);
 };
 
-app.use(express.json());
 app.use(cors());
 app.use(express.static("dist"));
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("<h1>Hello!</h1>");
-});
-
-app.get("/api/notes", (req, res) => {
-  Note.find({}).then((notes) => {
-    res.json(notes);
-  });
-});
-
-app.get("/api/notes/:id", (req, res, next) => {
-  const id = req.params.id;
-  Note.findById(id)
-    .then((note) => {
-      if (note) {
-        res.json(note);
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
-});
-
-app.post("/api/notes", (req, res) => {
-  const body = req.body;
-
-  if (!body.content) {
-    return res.status(400).json({
-      error: "content missing",
-    });
-  }
-
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
-  });
-
-  note.save().then((savedNote) => {
-    res.json(savedNote);
-  });
-});
-
-app.put("/api/notes/:id", (req, res, next) => {
-  const id = req.params.id;
-  const body = req.body;
-
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
-
-  Note.findByIdAndUpdate(id, note, { new: true })
-    .then((updatedNote) => {
-      res.json(updatedNote);
-    })
-    .catch((error) => next(error));
-});
-
-app.delete("/api/notes/:id", (req, res, next) => {
-  const id = req.params.id;
-  Note.findByIdAndDelete(id)
-    .then(() => {
-      res.status(204).end();
-    })
-    .catch((error) => next(error));
-});
+app.use("/api/notes", notesRouter);
 
 app.use(errorHandler);
 
