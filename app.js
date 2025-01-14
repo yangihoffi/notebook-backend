@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const notesRouter = require("./routes/notes.route");
 const connectToDatabse = require("./database/db");
+const notesRouter = require("./routes/notes.route");
+const usersRouter = require("./routes/users.route");
 
 // middlewares
 const errorHandler = require("./middlewares/errorHandler");
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(requestLogger);
 
 app.use("/api/notes", notesRouter);
+app.use("/api/users", usersRouter);
 
 app.use(unknownEndpoint);
 app.use(errorHandler);
