@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const notesRouter = require("./controllers/notes.controller");
+const notesRouter = require("./routes/notes.route");
 const connectToDatabse = require("./database/db");
 
 // middlewares
