@@ -72,8 +72,8 @@ app.put("/api/notes/:id", (req, res, next) => {
   };
 
   Note.findByIdAndUpdate(id, note, { new: true })
-    .then((updateNote) => {
-      res.json(updateNote);
+    .then((updatedNote) => {
+      res.json(updatedNote);
     })
     .catch((error) => next(error));
 });
@@ -81,7 +81,7 @@ app.put("/api/notes/:id", (req, res, next) => {
 app.delete("/api/notes/:id", (req, res, next) => {
   const id = req.params.id;
   Note.findByIdAndDelete(id)
-    .then((res) => {
+    .then(() => {
       res.status(204).end();
     })
     .catch((error) => next(error));
