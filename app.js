@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const notesRouter = require("./controllers/notes.controller");
+const connectToDatabse = require("./database/db");
 
 // middlewares
 const errorHandler = require("./middlewares/errorHandler");
@@ -8,6 +9,7 @@ const requestLogger = require("./middlewares/requestLogger");
 const unknownEndpoint = require("./middlewares/unknownEndpoint");
 
 const app = express();
+connectToDatabse();
 
 app.use(cors());
 app.use(express.static("dist"));
