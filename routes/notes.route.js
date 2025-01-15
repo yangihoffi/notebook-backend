@@ -34,7 +34,7 @@ notesRouter.post("/", (req, res) => {
   });
 
   note.save().then((savedNote) => {
-    res.json(savedNote);
+    res.status(201).json(savedNote);
   });
 });
 
